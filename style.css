@@ -12,6 +12,10 @@ body{
 :root{
     --squish-animation-time:500ms;
     --progress-animation-time:1000ms;
+    --circle-animation-time:200ms;
+    --checkmark-animation-time:300ms;
+    --btn-width:130px;
+    --btn-height:50px;
 }
 
 .btn{
@@ -20,7 +24,8 @@ body{
     position: relative;
     border: none;
     border-radius: .125em;
-    padding: 1em 2.5em;
+    width: var(--btn-width);
+    height: var(--btn-height);
     font-weight: 600;
     font-size: 30px;
     cursor: pointer;
@@ -32,6 +37,7 @@ body{
     user-select: none;
     cursor: default;
     animation: hide 0ms calc(var(--squish-animation-time) + var(--progress-animation-time));
+    animation-fill-mode: forwards;
 }
 
 .btn::before{
@@ -49,7 +55,7 @@ body{
     content: "";
     display: none;
     position: absolute;
-    background-color: #777;
+    background-color: #ccc;
     inset: 0;
     left: 51%;
     right: 51%;
@@ -65,20 +71,30 @@ body{
     display: block;
 }
 
-.svg-container{
-    background-color: #71DFBE;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    display:flex;
+.btn.animating + .svg-container{
+    background-color: #282D2F;
+    border-radius: .2em;
+    width:0;
+    height:0;
+    animation: circle var(--circle-animation-time) calc(var(--squish-animation-time) + var(--progress-animation-time)) forwards;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.checkmark-svg{
+.btn.animating + .svg-container .checkmark-svg{
     stroke: white;
-    width: 40px;
+    stroke-width: 2.5px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    width: 50px;
+    height: 60px;
+    stroke-dashoffset: 40.84104919433594;
+    stroke-dasharray:40.84104919433594;
+    animation: dash var(--checkmark-animation-time) calc(var(--squish-animation-time) + var(--progress-animation-time) + var(--circle-animation-time)) linear forwards;
 }
+
+
 
 @keyframes squish {
     100%{
@@ -103,5 +119,28 @@ body{
 @keyframes hide {
     100%{
         display: none;
+        width: 0%;
+        height: 0%;
+        padding: 0%;
+        margin: 0%;
+    }
+}
+
+@keyframes circle {
+    0%{
+        width: calc(var(--btn-width) * 1.50);
+        height: calc(var(--btn-height) * .1);
+    }
+    100%{
+        background-color: #71DFBE;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: 0;
     }
 }
